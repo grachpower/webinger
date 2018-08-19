@@ -1,0 +1,25 @@
+{
+  "name": "pinger",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "rimraf": "rimraf",
+    "clean:dist": "npm run rimraf -- dist",
+    "build": "npm run clean:dist && tsc ./src/**.ts --outDir dist",
+    "start": "ts-node ./src/index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/node": "^10.7.1",
+    "@types/rimraf": "^2.0.2",
+    "axios": "^0.18.0",
+    "core-js": "^2.5.7",
+    "rimraf": "^2.6.2",
+    "rxjs": "^6.2.2",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.0.1"
+  }
+}
