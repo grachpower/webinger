@@ -1,11 +1,14 @@
 {
   "name": "webinger",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ping your website",
   "main": "dist/index.js",
   "files": [
     "dist"
   ],
+  "bin": {
+    "webinger": "./dist/index.js"
+  },
   "scripts": {
     "rimraf": "rimraf",
     "clean:dist": "npm run rimraf -- dist",

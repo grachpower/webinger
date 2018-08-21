@@ -25,4 +25,8 @@ module.exports = {
             new UglifyJsPlugin()
         ]
     },
+    node: {
+        fs: 'empty',
+        child_process: 'empty',
+    }
 };
