@@ -1,44 +1,48 @@
 {
-    "compilerOptions": {
-      "target": "es2017",
-      "module": "commonjs",
-      "moduleResolution": "node",
-      "emitDecoratorMetadata": true,
-      "experimentalDecorators": true,
-      "allowSyntheticDefaultImports": true,
-      "sourceMap": true,
-      "noEmit": true,
-      "declaration": true,
-      "noEmitHelpers": false,
-      "importHelpers": true,
-      "strictNullChecks": false,
-      "outDir": "dist",
-      "lib": [
-        "es2017",
-      ],
-      "baseUrl": "./src",
-      "typeRoots": [
-        "node_modules/@types"
-      ]
-    },
-    "exclude": [
-      "node_modules"
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "noEmit": false,
+    "declaration": false,
+    "noEmitHelpers": false,
+    "importHelpers": true,
+    "strictNullChecks": false,
+    "alwaysStrict": true,
+    "outDir": "dist",
+    "lib": [
+      "ES5",
+      "ES2015",
+      "DOM",
+      "ScriptHost"
     ],
-    "awesomeTypescriptLoaderOptions": {
-      "forkChecker": true,
-      "useWebpackText": true
-    },
-    "compileOnSave": false,
-    "buildOnSave": false,
-    "atom": {
-      "rewriteTsconfig": false
-    },
-    "jest": {
-      "globals": {
-        "ts-jest": {
-          "tsConfigFile": "tsconfig.json",
-          "enableTsDiagnostics": true
-        }
+    "baseUrl": "./src",
+    "typeRoots": [
+      "node_modules/@types"
+    ]
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "awesomeTypescriptLoaderOptions": {
+    "forkChecker": true,
+    "useWebpackText": true
+  },
+  "compileOnSave": false,
+  "buildOnSave": false,
+  "atom": {
+    "rewriteTsconfig": false
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "tsConfigFile": "tsconfig.json",
+        "enableTsDiagnostics": true
       }
     }
   }
+}

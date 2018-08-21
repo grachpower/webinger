@@ -1,6 +1,34 @@
 import { Http, HttpMethod } from './request';
 import { throwError, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import * as args from 'yargs';
+
+const argv = args.argv;
+
+let method: HttpMethod;
+let url: string;
+let RPS: number;
+let output: string;
+
+if (!argv.method) {
+    method = HttpMethod.GET;
+} else {
+    method = argv.method;
+}
+
+if (!argv.url) {
+    throw new Error('Url is not defined, use "--url=http://yoururl.com" notation');
+} else {
+    url = argv.url;
+}
+
+if (!argv.rps) {
+    RPS = 1;
+} else {
+    RPS = argv.rps;
+}
+
+
 
 const http = new Http();
 
@@ -32,7 +60,7 @@ function getMethod<T>(method: HttpMethod, url: string): Observable<T> {
 
 // ============= INIT ============= //
 pingAddress(
-    HttpMethod.GET,
-    'http://localhost:8888/shop-item/4c821277-fd3c-4f71-b6cb-4f2db771d97b/men-portfel-viola-castellani',
-    10,
+    method,
+    url,
+    RPS,
 );
