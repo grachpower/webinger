@@ -1,9 +1,9 @@
 import { Http, HttpMethod } from './request';
 import { throwError, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import * as args from 'yargs';
+import * as yargs from 'yargs'
 
-const argv = args.argv;
+const argv = yargs.argv;
 
 let method: HttpMethod;
 let url: string;
