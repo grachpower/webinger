@@ -1,5 +1,5 @@
 {
-  "name": "pinger",
+  "name": "web-pinger",
   "version": "1.0.0",
   "description": "ping your website",
   "main": "dist/index.js",
