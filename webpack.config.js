@@ -1,6 +1,7 @@
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const path = require('path');
 const fs = require('fs');
+const webpack = require('webpack');
 
 const nodeModules = {};
 fs.readdirSync('node_modules')
@@ -30,6 +31,9 @@ module.exports = {
             { test: /\.tsx?$/, loader: "ts-loader" }
         ]
     },
+    plugins: [
+        new webpack.BannerPlugin({ banner: "#!/usr/bin/env node", raw: true }),
+    ],
     externals: nodeModules,
     optimization: {
         minimizer: [
