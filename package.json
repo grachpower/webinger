@@ -6,6 +6,7 @@
   "files": [
     "dist"
   ],
+  "preferGlobal": true,
   "bin": {
     "webinger": "./dist/index.js"
   },
