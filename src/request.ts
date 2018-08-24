@@ -31,59 +31,59 @@ export interface RequestParams {
   }
 
 export class Http {
-    get<T>(request: string, params: RequestParams = {}): Observable<T> {
-        return Observable.create((observer: Observer<T>) => {
+    get<T>(request: string, params: RequestParams = {}): Observable<AxiosResponse> {
+        return Observable.create((observer: Observer<AxiosResponse<T>>) => {
             axios.get<T>(request, params)
             .then((response: AxiosResponse) => {
-                observer.next(response.data);
+                observer.next(response);
                 observer.complete();
             })
             .catch((response: AxiosResponse) => {
-                observer.error(response.statusText);
+                observer.error(response);
                 observer.complete();
             })
         })
     }
 
     post<T>(request: string, params: any = {}): Observable<T> {
-        return Observable.create((observer: Observer<T>) => {
+        return Observable.create((observer: Observer<AxiosResponse<T>>) => {
             axios.post<T>(request, params)
             .then((response: AxiosResponse) => {
-                observer.next(response.data);
+                observer.next(response);
                 observer.complete();
             })
             .catch((response: AxiosResponse) => {
-                observer.error(response.statusText);
+                observer.error(response);
                 observer.complete();
             })
         })
     }
 
     delete<T>(request: string, params: any = {}): Observable<T> {
-        return Observable.create((observer: Observer<T>) => {
+        return Observable.create((observer: Observer<AxiosResponse<T>>) => {
             axios.delete(request, params)
             .then((response: AxiosResponse) => {
-                observer.next(response.data);
+                observer.next(response);
                 observer.complete();
             })
             .catch((response: AxiosResponse) => {
-                observer.error(response.statusText);
+                observer.error(response);
                 observer.complete();
             })
         })
     }
 
     put<T>(request: string, params: any = {}): Observable<T> {
-        return Observable.create((observer: Observer<T>) => {
+        return Observable.create((observer: Observer<AxiosResponse<T>>) => {
             axios.put<T>(request, params)
             .then((response: AxiosResponse) => {
-                observer.next(response.data);
+                observer.next(response);
                 observer.complete();
             })
             .catch((response: AxiosResponse) => {
-                observer.error(response.statusText);
+                observer.error(response);
                 observer.complete();
             })
         })
     }
-};
+}
