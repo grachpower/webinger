@@ -222,7 +222,7 @@ function consoleFinalize(spinner: Spinner): void {
     calcFinalize();
     spinner.stop();
 
-    console.log(`Webinger finished in ${initialDataState.allTime}`);
+    console.log(`Webinger finished in ${initialDataState.allTime}ms`);
     console.log(`  Success requests: ${initialDataState.successRequests} - ${initialDataState.successPercent}$`);
     console.log(`  Error requests: ${initialDataState.errorRequests} - ${initialDataState.errorPercent}$`);
     console.log(`  Average response time: ${initialDataState.averageTime}ms`);
