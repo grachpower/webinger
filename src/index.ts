@@ -105,9 +105,9 @@ function calcFinalize(): void {
     const sortedByAsc: number[] = initialDataState.requests
         .sort((a: RequestModel, b: RequestModel) => a.time - b.time)
         .map(({time}: RequestModel) => time);
-    const maxTime = sortedByAsc[0];
-    const minTime = sortedByAsc[sortedByAsc.length];
-    const allTime = (initialDataState.initDate as any) - (endDate as any);
+    const maxTime = sortedByAsc[sortedByAsc.length - 1];
+    const minTime = sortedByAsc[0];
+    const allTime = (endDate as any) - (initialDataState.initDate as any);
     const successPercent = (successRequests / initialDataState.requestsCount) * 100;
     const errorPercent = (errorRequests / initialDataState.requestsCount) * 100;
 
@@ -188,7 +188,7 @@ function consoleInitial(dateInit: Date): void {
     console.log(`  Selected url: ${url}`);
     console.log(`  Selected method: ${method}`);
     console.log(`  Selected rps: ${RPS}`);
-    console.log(`  Selected requests count: ${RPS}`);
+    console.log(`  Selected requests count: ${requests}`);
     console.log('================================');
 }
 
@@ -196,11 +196,11 @@ function consoleFinalize(): void {
     calcFinalize();
 
     console.log(`Webinger finished in ${initialDataState.allTime}`);
-    console.log(`Success requests: ${initialDataState.successRequests} - ${initialDataState.successPercent}`);
-    console.log(`Error requests: ${initialDataState.errorRequests} - ${initialDataState.errorPercent}`);
-    console.log(`Average response time: ${initialDataState.averageTime}`);
-    console.log(`Max response time: ${initialDataState.maxTime}`);
-    console.log(`Min response time: ${initialDataState.minTime}`);
+    console.log(`Success requests: ${initialDataState.successRequests} - ${initialDataState.successPercent}$`);
+    console.log(`Error requests: ${initialDataState.errorRequests} - ${initialDataState.errorPercent}$`);
+    console.log(`Average response time: ${initialDataState.averageTime}ms`);
+    console.log(`Max response time: ${initialDataState.maxTime}ms`);
+    console.log(`Min response time: ${initialDataState.minTime}ms`);
 }
 
 
