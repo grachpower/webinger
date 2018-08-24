@@ -1,12 +1,14 @@
 import { throwError, Observable, BehaviorSubject, interval } from 'rxjs';
 import { catchError, filter, finalize, mergeMap, takeUntil, tap } from 'rxjs/operators';
 import * as yargs from 'yargs'
+import * as readline from 'readline';
 import { AxiosResponse } from "axios";
 import { includes } from 'lodash';
 
 import { Http, HttpMethod } from './request';
 import { DataModel } from "./models/data.model";
 import { RequestModel } from "./models/request.model";
+import { Spinner } from 'cli-spinner';
 
 const argv = yargs.argv;
 
@@ -76,13 +78,14 @@ function pingAddress<T>(method: HttpMethod, url: string, rps: number, requestsCo
     const dateInit = new Date;
     const count$ = new BehaviorSubject<number>(0);
     const status$ = count$.pipe(filter((count: number) => count >= requestsCount));
+    const spinner = new Spinner('processing.. %s');
 
-    consoleInitial(dateInit);
+    consoleInitial(dateInit, spinner);
 
     interval(1000 / rps)
         .pipe(
             takeUntil(status$),
-            finalize(() => consoleFinalize()),
+            finalize(() => consoleFinalize(spinner)),
             mergeMap(() => sendRequest(new Date(), count$)),
         )
         .subscribe();
@@ -204,17 +207,20 @@ function sendRequest<T>(requestTimeStart: Date, count$: BehaviorSubject<number>)
     }
 }
 
-function consoleInitial(dateInit: Date): void {
+function consoleInitial(dateInit: Date, spinner: Spinner): void {
     console.log(`Webinger inited at ${dateInit.getSeconds()}:${dateInit.getMinutes()}:${dateInit.getHours()}`);
     console.log(`  Selected url: ${url}`);
     console.log(`  Selected method: ${method}`);
     console.log(`  Selected rps: ${RPS}`);
     console.log(`  Selected requests count: ${requests}`);
     console.log('================================');
+
+    spinner.start();
 }
 
-function consoleFinalize(): void {
+function consoleFinalize(spinner: Spinner): void {
     calcFinalize();
+    spinner.stop();
 
     console.log(`Webinger finished in ${initialDataState.allTime}`);
     console.log(`  Success requests: ${initialDataState.successRequests} - ${initialDataState.successPercent}$`);
