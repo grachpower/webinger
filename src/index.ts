@@ -221,10 +221,11 @@ function consoleInitial(dateInit: Date, spinner: Spinner): void {
 function consoleFinalize(spinner: Spinner): void {
     calcFinalize();
     spinner.stop();
+    console.log('/r/n');
 
     console.log(`Webinger finished in ${initialDataState.allTime}ms`);
-    console.log(`  Success requests: ${initialDataState.successRequests} - ${initialDataState.successPercent}$`);
-    console.log(`  Error requests: ${initialDataState.errorRequests} - ${initialDataState.errorPercent}$`);
+    console.log(`  Success requests: ${initialDataState.successRequests} - ${initialDataState.successPercent}%`);
+    console.log(`  Error requests: ${initialDataState.errorRequests} - ${initialDataState.errorPercent}%`);
     console.log(`  Average response time: ${initialDataState.averageTime}ms`);
     console.log(`  Max response time: ${initialDataState.maxTime}ms`);
     console.log(`  Min response time: ${initialDataState.minTime}ms`);
