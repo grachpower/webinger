@@ -2,6 +2,7 @@ import { throwError, Observable, BehaviorSubject, interval } from 'rxjs';
 import { catchError, filter, finalize, mergeMap, takeUntil, tap } from 'rxjs/operators';
 import * as yargs from 'yargs'
 import { AxiosResponse } from "axios";
+import { includes } from 'lodash';
 
 import { Http, HttpMethod } from './request';
 import { DataModel } from "./models/data.model";
@@ -110,6 +111,21 @@ function calcFinalize(): void {
     const allTime = (endDate as any) - (initialDataState.initDate as any);
     const successPercent = (successRequests / initialDataState.requestsCount) * 100;
     const errorPercent = (errorRequests / initialDataState.requestsCount) * 100;
+    const allCodes =  initialDataState.requests
+        .reduce((acc: number[], curr: RequestModel) => includes(acc, curr.statusCode)
+            ? acc
+            : [...acc, curr.statusCode], []);
+
+    const statusCodes = [];
+
+    allCodes.forEach((statusCode: number) => {
+        statusCodes.push({
+           statusCode,
+           count: initialDataState.requests
+               .filter((req: RequestModel) => req.statusCode === statusCode).length,
+        });
+    });
+
 
     updateState({
         endDate,
@@ -121,6 +137,7 @@ function calcFinalize(): void {
         allTime,
         successPercent,
         errorPercent,
+        statusCodes,
     });
 }
 
@@ -205,6 +222,12 @@ function consoleFinalize(): void {
     console.log(` Average response time: ${initialDataState.averageTime}ms`);
     console.log(` Max response time: ${initialDataState.maxTime}ms`);
     console.log(` Min response time: ${initialDataState.minTime}ms`);
+
+    console.log('');
+    console.log('Status codes: ');
+    initialDataState.statusCodes.forEach((item: {statusCode: number, count: number}) => {
+        console.log(` status: ${item.statusCode} - count: ${item.count}`);
+    });
 }
 
 

@@ -17,5 +17,5 @@ export interface DataModel {
     allTime: number;
     successPercent: number;
     errorPercent: number;
-    statusCodes: number[];
+    statusCodes: {statusCode: number, count: number}[];
 }
