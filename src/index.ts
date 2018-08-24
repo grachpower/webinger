@@ -82,7 +82,7 @@ function pingAddress<T>(method: HttpMethod, url: string, rps: number, requestsCo
         .pipe(
             takeUntil(status$),
             finalize(() => consoleFinalize()),
-            mergeMap(() => sendRequst(new Date(), count$)),
+            mergeMap(() => sendRequest(new Date(), count$)),
         )
         .subscribe();
 }
@@ -150,37 +150,41 @@ function getMethod<T>(method: HttpMethod, url: string): Observable<AxiosResponse
     }
 }
 
-function sendRequst<T>(requestTimeStart: Date, count$: BehaviorSubject<number>): Observable<AxiosResponse<T>> {
-    return getMethod(method, url)
-        .pipe(
-            catchError((err: AxiosResponse<T>) => {
-                const requestTimeEnd = new Date();
+function sendRequest<T>(requestTimeStart: Date, count$: BehaviorSubject<number>): Observable<AxiosResponse<T>> {
+    try{
+        return getMethod(method, url)
+            .pipe(
+                catchError((err: AxiosResponse<T>) => {
+                    const requestTimeEnd = new Date();
 
-                addRequestToState({
-                    statusCode: err.status,
-                    initDate: requestTimeStart,
-                    endDate: requestTimeEnd,
-                    time: (requestTimeEnd as any) - (requestTimeStart as any),
-                    err: err.statusText,
-                } as RequestModel);
+                    addRequestToState({
+                        statusCode: err.status,
+                        initDate: requestTimeStart,
+                        endDate: requestTimeEnd,
+                        time: (requestTimeEnd as any) - (requestTimeStart as any),
+                        err: err.statusText,
+                    } as RequestModel);
 
-                count$.next(count$.value + 1);
+                    count$.next(count$.value + 1);
 
-                return throwError(err);
-            }),
-            tap((res: AxiosResponse<T>) => {
-                const requestTimeEnd = new Date();
+                    return throwError(err);
+                }),
+                tap((res: AxiosResponse<T>) => {
+                    const requestTimeEnd = new Date();
 
-                addRequestToState({
-                    statusCode: res.status,
-                    initDate: requestTimeStart,
-                    endDate: requestTimeEnd,
-                    time: (requestTimeEnd as any) - (requestTimeStart as any),
-                } as RequestModel);
+                    addRequestToState({
+                        statusCode: res.status,
+                        initDate: requestTimeStart,
+                        endDate: requestTimeEnd,
+                        time: (requestTimeEnd as any) - (requestTimeStart as any),
+                    } as RequestModel);
 
-                count$.next(count$.value + 1);
-            })
-        );
+                    count$.next(count$.value + 1);
+                })
+            );
+    } catch (e) {
+        throw new Error(`Cannot connect to ${url}: ${e}`);
+    }
 }
 
 function consoleInitial(dateInit: Date): void {
@@ -196,11 +200,11 @@ function consoleFinalize(): void {
     calcFinalize();
 
     console.log(`Webinger finished in ${initialDataState.allTime}`);
-    console.log(`Success requests: ${initialDataState.successRequests} - ${initialDataState.successPercent}$`);
-    console.log(`Error requests: ${initialDataState.errorRequests} - ${initialDataState.errorPercent}$`);
-    console.log(`Average response time: ${initialDataState.averageTime}ms`);
-    console.log(`Max response time: ${initialDataState.maxTime}ms`);
-    console.log(`Min response time: ${initialDataState.minTime}ms`);
+    console.log(` Success requests: ${initialDataState.successRequests} - ${initialDataState.successPercent}$`);
+    console.log(` Error requests: ${initialDataState.errorRequests} - ${initialDataState.errorPercent}$`);
+    console.log(` Average response time: ${initialDataState.averageTime}ms`);
+    console.log(` Max response time: ${initialDataState.maxTime}ms`);
+    console.log(` Min response time: ${initialDataState.minTime}ms`);
 }
 
 
