@@ -217,16 +217,16 @@ function consoleFinalize(): void {
     calcFinalize();
 
     console.log(`Webinger finished in ${initialDataState.allTime}`);
-    console.log(` Success requests: ${initialDataState.successRequests} - ${initialDataState.successPercent}$`);
-    console.log(` Error requests: ${initialDataState.errorRequests} - ${initialDataState.errorPercent}$`);
-    console.log(` Average response time: ${initialDataState.averageTime}ms`);
-    console.log(` Max response time: ${initialDataState.maxTime}ms`);
-    console.log(` Min response time: ${initialDataState.minTime}ms`);
+    console.log(`  Success requests: ${initialDataState.successRequests} - ${initialDataState.successPercent}$`);
+    console.log(`  Error requests: ${initialDataState.errorRequests} - ${initialDataState.errorPercent}$`);
+    console.log(`  Average response time: ${initialDataState.averageTime}ms`);
+    console.log(`  Max response time: ${initialDataState.maxTime}ms`);
+    console.log(`  Min response time: ${initialDataState.minTime}ms`);
 
     console.log('');
     console.log('Status codes: ');
     initialDataState.statusCodes.forEach((item: {statusCode: number, count: number}) => {
-        console.log(` status: ${item.statusCode} - count: ${item.count}`);
+        console.log(`  status: ${item.statusCode} - count: ${item.count}`);
     });
 }
 
