@@ -1,10 +1,11 @@
-import { Http, HttpMethod } from './request';
 import { throwError, Observable, BehaviorSubject, interval } from 'rxjs';
 import { catchError, filter, finalize, mergeMap, takeUntil, tap } from 'rxjs/operators';
 import * as yargs from 'yargs'
 import { AxiosResponse } from "axios";
-import {DataModel} from "./models/data.model";
-import {RequestModel} from "./models/request.model";
+
+import { Http, HttpMethod } from './request';
+import { DataModel } from "./models/data.model";
+import { RequestModel } from "./models/request.model";
 
 const argv = yargs.argv;
 
@@ -50,15 +51,22 @@ if (!argv.requests) {
 const http = new Http();
 
 const initialDataState: DataModel = {
-    initDate: null,
-    endDate: null,
-    requestsCount: null,
-    url: null,
-    method: null,
-    rps: null,
-    requests: [],
-    successRequests: null,
-    errorRequests: null,
+    initDate: null, // on init
+    endDate: null, // on finalize
+    requestsCount: null, // on init
+    url: null, // on init
+    method: null, // on init
+    rps: null, // on init
+    requests: [], // in runtime
+    successRequests: null, // on finalize
+    errorRequests: null, // on finalize
+    averageTime: null, // on finalize
+    maxTime: null, // on finalize
+    minTime: null, // on finalize
+    allTime: null, // on finalize
+    successPercent: null,
+    errorPercent: null,
+    statusCodes: null,
 };
 
 function pingAddress<T>(method: HttpMethod, url: string, rps: number, requestsCount: number): void {
@@ -68,16 +76,12 @@ function pingAddress<T>(method: HttpMethod, url: string, rps: number, requestsCo
     const count$ = new BehaviorSubject<number>(0);
     const status$ = count$.pipe(filter((count: number) => count >= requestsCount));
 
-    console.log(`Webinger inited at ${dateInit.getSeconds()}:${dateInit.getMinutes()}:${dateInit.getHours()}`);
-    console.log(`Selected url: ${url}`);
-    console.log(`Selected method: ${method}`);
-    console.log(`Selected rps: ${RPS}`);
-    console.log(`Selected requests count: ${RPS}`);
+    consoleInitial(dateInit);
 
     interval(1000 / rps)
         .pipe(
             takeUntil(status$),
-            finalize(() => calcFinalize()),
+            finalize(() => consoleFinalize()),
             mergeMap(() => sendRequst(new Date(), count$)),
         )
         .subscribe();
@@ -92,7 +96,45 @@ function addRequestToState(request: RequestModel): void {
 }
 
 function calcFinalize(): void {
+    const endDate = new Date();
+    const errorRequests: number = initialDataState.requests
+        .filter((request: RequestModel) => request.statusCode >= 400).length;
+    const successRequests: number = initialDataState.requests
+        .filter((request: RequestModel) => request.statusCode < 400).length;
+    const averageTime: number = calcAverageTime(initialDataState.requests);
+    const sortedByAsc: number[] = initialDataState.requests
+        .sort((a: RequestModel, b: RequestModel) => a.time - b.time)
+        .map(({time}: RequestModel) => time);
+    const maxTime = sortedByAsc[0];
+    const minTime = sortedByAsc[sortedByAsc.length];
+    const allTime = (initialDataState.initDate as any) - (endDate as any);
+    const successPercent = (successRequests / initialDataState.requestsCount) * 100;
+    const errorPercent = (errorRequests / initialDataState.requestsCount) * 100;
 
+    updateState({
+        endDate,
+        errorRequests,
+        successRequests,
+        averageTime,
+        maxTime,
+        minTime,
+        allTime,
+        successPercent,
+        errorPercent,
+    });
+}
+
+function calcAverageTime(requests: RequestModel[]): number {
+    const arrTime = requests
+        .map(({time}: RequestModel) => time);
+
+    const average: number = arrTime.reduce(function(acc, curr) { return acc+curr; }) / arrTime.length;
+
+    return Math.sqrt(arrTime.reduce((acc: number, curr: number) => {
+        const dev = curr - average;
+
+        return acc + dev * dev;
+    }) / arrTime.length);
 }
 
 function getMethod<T>(method: HttpMethod, url: string): Observable<AxiosResponse<T>> {
@@ -139,6 +181,26 @@ function sendRequst<T>(requestTimeStart: Date, count$: BehaviorSubject<number>):
                 count$.next(count$.value + 1);
             })
         );
+}
+
+function consoleInitial(dateInit: Date): void {
+    console.log(`Webinger inited at ${dateInit.getSeconds()}:${dateInit.getMinutes()}:${dateInit.getHours()}`);
+    console.log(`  Selected url: ${url}`);
+    console.log(`  Selected method: ${method}`);
+    console.log(`  Selected rps: ${RPS}`);
+    console.log(`  Selected requests count: ${RPS}`);
+    console.log('================================');
+}
+
+function consoleFinalize(): void {
+    calcFinalize();
+
+    console.log(`Webinger finished in ${initialDataState.allTime}`);
+    console.log(`Success requests: ${initialDataState.successRequests} - ${initialDataState.successPercent}`);
+    console.log(`Error requests: ${initialDataState.errorRequests} - ${initialDataState.errorPercent}`);
+    console.log(`Average response time: ${initialDataState.averageTime}`);
+    console.log(`Max response time: ${initialDataState.maxTime}`);
+    console.log(`Min response time: ${initialDataState.minTime}`);
 }
 
 

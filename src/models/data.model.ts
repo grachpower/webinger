@@ -11,4 +11,11 @@ export interface DataModel {
     requests: RequestModel[];
     successRequests: number;
     errorRequests: number;
+    averageTime: number;
+    maxTime: number;
+    minTime: number;
+    allTime: number;
+    successPercent: number;
+    errorPercent: number;
+    statusCodes: number[];
 }
