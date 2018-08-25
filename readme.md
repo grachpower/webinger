@@ -1,10 +1,15 @@
 # Webinger
 
-## Ping your web app
- Load testing tool for web apps
+## Test your web app
+ Load testing cli tool for web apps
+ 
+## Instalation
+install globally
+```
+npm install -g webinger
+```
 
 ## Usage
-
 ```
 webinger --url=http://yourwebsite.com --method=get --rps=20 --requests=200
 ```
