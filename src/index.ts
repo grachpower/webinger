@@ -221,7 +221,8 @@ function consoleInitial(dateInit: Date, spinner: Spinner): void {
 function consoleFinalize(spinner: Spinner): void {
     calcFinalize();
     spinner.stop();
-    console.log('/r/n');
+    console.log(`  ${initialDataState.requests.length}/${initialDataState.requests}`);
+    console.log('\r\n');
 
     console.log(`Webinger finished in ${initialDataState.allTime}ms`);
     console.log(`  Success requests: ${initialDataState.successRequests} - ${initialDataState.successPercent}%`);
