@@ -1,7 +1,6 @@
 import { throwError, Observable, BehaviorSubject, interval } from 'rxjs';
 import { catchError, filter, finalize, mergeMap, takeUntil, tap } from 'rxjs/operators';
 import * as yargs from 'yargs'
-import * as readline from 'readline';
 import { AxiosResponse } from "axios";
 import { includes } from 'lodash';
 
@@ -221,7 +220,6 @@ function consoleInitial(dateInit: Date, spinner: Spinner): void {
 function consoleFinalize(spinner: Spinner): void {
     calcFinalize();
     spinner.stop();
-    console.log(`  ${initialDataState.requests.length}/${initialDataState.requests}`);
     console.log('\r\n');
 
     console.log(`Webinger finished in ${initialDataState.allTime}ms`);
